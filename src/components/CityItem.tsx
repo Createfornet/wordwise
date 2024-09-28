@@ -7,7 +7,17 @@ interface Props {
   city: CityInterface;
 }
 
-const formatDate = (date: string) =>
+function getFlagEmoji(countryCode: string): string {
+  return countryCode
+    .toUpperCase()
+    .split('')
+    .map((char) => String.fromCodePoint(char.charCodeAt(0) + 0x1f1a5))
+    .join('');
+}
+
+console.log(getFlagEmoji('en'))
+
+const formatDate = (date: Date) =>
   new Intl.DateTimeFormat('en', {
     day: 'numeric',
     month: 'long',
@@ -27,7 +37,7 @@ function CityItem({
         }`}
         to={`${id}?lat=${position.lat}&lng=${position.lng}`}
       >
-        <span className={styles.emoji}>{emoji}</span>
+        <span className={styles.emoji}>{getFlagEmoji(emoji)}</span>
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>({formatDate(date)})</time>
         <button className={styles.deleteBtn}>&times;</button>

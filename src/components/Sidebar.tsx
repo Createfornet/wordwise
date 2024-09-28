@@ -4,7 +4,6 @@ import Logo from './Logo';
 import style from './Sidebar.module.css';
 
 function Sidebar() {
-  console.log(<Outlet />);
   return (
     <div className={style.sidebar}>
       <Logo />

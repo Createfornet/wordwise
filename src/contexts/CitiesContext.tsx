@@ -8,11 +8,14 @@ import {
 import axios from 'axios';
 import { City as CityInterface } from './../interfaces';
 
+const BASE_API = 'http://localhost:8000';
+
 interface Context {
   cities: CityInterface[];
   isLoading: boolean;
   currentCity: CityInterface | null;
   getCity: (id: number) => void;
+  postCity: (newCity: CityInterface) => void;
 }
 interface State {
   cities: CityInterface[];
@@ -21,11 +24,14 @@ interface State {
 }
 
 interface Action {
-  type: 'storeCities' | 'startFetching' | 'finishFetching' | 'recivedCityData';
+  type:
+    | 'storeCities'
+    | 'startFetching'
+    | 'finishFetching'
+    | 'recivedCityData'
+    | 'updateCities';
   payload?: [] | CityInterface;
 }
-
-const BASE_API = 'http://localhost:8000';
 
 const CitiesContext = createContext({} as Context);
 
@@ -52,6 +58,9 @@ function reducer(state: State, action: Action): State {
         ...state,
         currentCity: action.payload || state.currentCity,
       };
+    case 'updateCities':
+      if (action.payload instanceof Array || !action.payload) return state;
+      return { ...state, cities: [...state.cities, action.payload] };
   }
 }
 
@@ -91,8 +100,27 @@ function CitiesProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function postCity(newCity: CityInterface) {
+    try {
+      dispatch({ type: 'startFetching' });
+      const city = await axios.post(`${BASE_API}/cities`, newCity, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(city);
+      dispatch({ type: 'updateCities', payload: newCity });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      dispatch({ type: 'finishFetching' });
+    }
+  }
+
   return (
-    <CitiesContext.Provider value={{ cities, isLoading, currentCity, getCity }}>
+    <CitiesContext.Provider
+      value={{ cities, isLoading, currentCity, getCity, postCity }}
+    >
       {children}
     </CitiesContext.Provider>
   );
