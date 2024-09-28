@@ -15,7 +15,7 @@ function getFlagEmoji(countryCode: string): string {
     .join('');
 }
 
-console.log(getFlagEmoji('en'))
+console.log(getFlagEmoji('en'));
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat('en', {
@@ -25,10 +25,13 @@ const formatDate = (date: Date) =>
     weekday: 'long',
   }).format(new Date(date));
 
-function CityItem({
-  city: { cityName, country, date, emoji, id, notes, position },
-}: Props) {
-  const { currentCity } = useCities();
+function CityItem({ city: { cityName, date, emoji, id, position } }: Props) {
+  const { currentCity, deleteCity } = useCities();
+
+  function handleDeleteCity(e: React.MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    deleteCity(Number(id));
+  }
   return (
     <li>
       <Link
@@ -40,7 +43,9 @@ function CityItem({
         <span className={styles.emoji}>{getFlagEmoji(emoji)}</span>
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>({formatDate(date)})</time>
-        <button className={styles.deleteBtn}>&times;</button>
+        <button className={styles.deleteBtn} onClick={handleDeleteCity}>
+          &times;
+        </button>
       </Link>
     </li>
   );

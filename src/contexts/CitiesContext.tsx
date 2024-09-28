@@ -16,6 +16,7 @@ interface Context {
   currentCity: CityInterface | null;
   getCity: (id: number) => void;
   postCity: (newCity: CityInterface) => void;
+  deleteCity: (id: number) => void;
 }
 interface State {
   cities: CityInterface[];
@@ -29,8 +30,9 @@ interface Action {
     | 'startFetching'
     | 'finishFetching'
     | 'recivedCityData'
-    | 'updateCities';
-  payload?: [] | CityInterface;
+    | 'addCity'
+    | 'deleteCity';
+  payload?: [] | CityInterface | number;
 }
 
 const CitiesContext = createContext({} as Context);
@@ -53,14 +55,29 @@ function reducer(state: State, action: Action): State {
     case 'finishFetching':
       return { ...state, status: 'ready' };
     case 'recivedCityData':
-      if (action.payload instanceof Array) return state;
+      if (
+        action.payload instanceof Array ||
+        !action.payload ||
+        typeof action.payload === 'number'
+      )
+        return state;
       return {
         ...state,
-        currentCity: action.payload || state.currentCity,
+        currentCity: state.currentCity,
       };
-    case 'updateCities':
-      if (action.payload instanceof Array || !action.payload) return state;
+    case 'addCity':
+      if (
+        action.payload instanceof Array ||
+        !action.payload ||
+        typeof action.payload === 'number'
+      )
+        return state;
       return { ...state, cities: [...state.cities, action.payload] };
+    case 'deleteCity':
+      return {
+        ...state,
+        cities: state.cities.filter((city) => +city.id !== action.payload),
+      };
   }
 }
 
@@ -92,9 +109,21 @@ function CitiesProvider({ children }: { children: ReactNode }) {
     try {
       dispatch({ type: 'startFetching' });
       const citiy = await axios.get(`${BASE_API}/cities/${id}`);
-      dispatch({ type: 'recivedCityData', payload: citiy.data });
-    } catch (e) {
-      console.log(e);
+      dispatch({ type: 'addCity', payload: citiy.data });
+    } catch (err) {
+      console.log('there was an error deleting a city:', err);
+    } finally {
+      dispatch({ type: 'finishFetching' });
+    }
+  }
+
+  async function deleteCity(id: number) {
+    try {
+      dispatch({ type: 'startFetching' });
+      await axios.delete(`${BASE_API}/cities/${id}`);
+      dispatch({ type: 'deleteCity', payload: id });
+    } catch (err) {
+      console.log('there was an error deleting a city:', err);
     } finally {
       dispatch({ type: 'finishFetching' });
     }
@@ -109,7 +138,7 @@ function CitiesProvider({ children }: { children: ReactNode }) {
         },
       });
       console.log(city);
-      dispatch({ type: 'updateCities', payload: newCity });
+      dispatch({ type: 'addCity', payload: newCity });
     } catch (e) {
       console.log(e);
     } finally {
@@ -119,7 +148,7 @@ function CitiesProvider({ children }: { children: ReactNode }) {
 
   return (
     <CitiesContext.Provider
-      value={{ cities, isLoading, currentCity, getCity, postCity }}
+      value={{ cities, isLoading, currentCity, getCity, postCity, deleteCity }}
     >
       {children}
     </CitiesContext.Provider>
