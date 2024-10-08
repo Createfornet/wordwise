@@ -157,7 +157,7 @@ function CitiesProvider({ children }: { children: ReactNode }) {
 
 function useCities() {
   const context = useContext(CitiesContext);
-  if (context === undefined)
+  if (typeof context === 'undefined')
     throw new Error('CitiesContext was used outside of the CitiesProvider');
   return context;
 }

@@ -11,6 +11,66 @@
         "lat": 41.672911819602085,
         "lng": -6.130371093750001
       }
+    },
+    {
+      "id": "1728359721812",
+      "cityName": "Madrid",
+      "country": "Spain",
+      "emoji": "ES",
+      "notes": "",
+      "date": "2024-10-08T03:55:12.047Z",
+      "position": {
+        "lat": 40.34654412118006,
+        "lng": -3.7133789062500004
+      }
+    },
+    {
+      "id": "1728360675372",
+      "cityName": "Alburquerque",
+      "country": "Spain",
+      "emoji": "ES",
+      "notes": "",
+      "date": "2024-10-08T04:11:11.192Z",
+      "position": {
+        "lat": 39.232253141714914,
+        "lng": -6.8115234375
+      }
+    },
+    {
+      "id": "1728361036140",
+      "cityName": "Idles",
+      "country": "Algeria",
+      "emoji": "DZ",
+      "notes": "",
+      "date": "2024-10-08T04:17:14.323Z",
+      "position": {
+        "lat": 23.725011735951796,
+        "lng": 6.064453125000001
+      }
+    },
+    {
+      "id": "1728365734590",
+      "cityName": "Allin/Allin",
+      "country": "Spain",
+      "emoji": "ES",
+      "notes": "",
+      "date": "2024-10-08T05:35:31.804Z",
+      "position": {
+        "lat": 42.69858589169842,
+        "lng": -2.0874023437500004
+      }
+    },
+    {
+      "id": "1728366064618",
+      "cityName": "Belinchon",
+      "country": "Spain",
+      "emoji": "ES",
+      "notes": "",
+      "date": "2024-10-08T05:41:02.471Z",
+      "position": {
+        "lat": 40.07807142745009,
+        "lng": -2.96630859375
+      }
     }
   ]
 }

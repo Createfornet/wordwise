@@ -41,12 +41,14 @@ function Form() {
 
       async function fetchCityData() {
         try {
+          setGeocodingError('')
           setIsLoadingGeocoding(true);
           const res = await axios(
             `${BASE_URL}?latitude=${lat}&longitude=${lng}`
           );
           const data = res.data;
 
+          console.log(data.countryCode)
           if (!data.countryCode)
             throw new Error('Doesnt seem to be a city! Click somewhere else.');
 
